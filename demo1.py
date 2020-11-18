@@ -2,8 +2,6 @@ from __future__ import print_function
 import datetime
 import pickle
 import os.path
-import apscheduler
-import currentTime
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -41,7 +39,7 @@ def main():
     now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     print('Getting the upcoming 10 events')
     events_result = service.events().list(calendarId='primary', timeMin=now,
-                                        maxResults=1, singleEvents=True,
+                                        maxResults=10, singleEvents=True,
                                         orderBy='startTime').execute()
     events = events_result.get('items', [])
 
@@ -49,15 +47,8 @@ def main():
         print('No upcoming events found.')
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
-        #print(start, event['summary'])
-        #print(f'{event["summary"]} is starting at {start.split("T")[1][:5]}!')
-        #print(currentTime)
+        print(start, event['summary'])
 
-        # Declaring the current time and subtracting the even time from it
-        theCurrentTime = currentTime
-        print(currentTime)
-        eventTime = start.split("T")[1][:5]+ ":00"
-        print(f"The event time is {eventTime}")
 
 if __name__ == '__main__':
     main()
